@@ -5,4 +5,5 @@ authStore.loadTokenFromStorage();
 
 <template>
   <RouterView/>
+  <ModalLayout/>
 </template>
