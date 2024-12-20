@@ -19,6 +19,7 @@ interface State {
 export const useTaskStore = defineStore('task', () => {
     const listStore = useListStore();
     const tasks = ref([]);
+    const active = ref(undefined);
 
     async function fetchTasks() {
         this.isLoading = true;
@@ -39,17 +40,19 @@ export const useTaskStore = defineStore('task', () => {
         try {
             const response = await axios.post(`/lists/${listStore.active.id}/tasks`, taskData);
             this.tasks.push(response.data);
+            listStore.active.tasks.push(response.data);
         } catch (error: any) {
             console.error(error);
             this.error = error.response?.data?.message || 'Failed to create task';
         }
     }
 
-    async function deleteTask(taskId: string) {
+    async function deleteActiveTask() {
         this.error = null;
         try {
-            await axios.delete(`/lists/${listStore.active.id}/tasks/${taskId}`);
-            this.tasks = this.tasks.filter((task) => task.id !== taskId);
+            await axios.delete(`/lists/${listStore.active.id}/tasks/${active.value.id}`);
+            this.tasks = this.tasks.filter((task) => task.id !== active.value.id);
+            active.value = undefined;
         } catch (error: any) {
             this.error = error.response?.data?.message || 'Failed to delete task';
         }
@@ -67,5 +70,9 @@ export const useTaskStore = defineStore('task', () => {
         }
     }
 
-    return {fetchTasks, createTask, deleteTask, toggleTaskCompletion}
+    async function setActive(id: string) {
+        active.value = listStore.active.tasks.find(task => task.id === id);
+    }
+
+    return {fetchTasks, createTask, deleteActiveTask, toggleTaskCompletion, setActive, active}
 });

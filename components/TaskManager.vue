@@ -16,6 +16,10 @@ function openNewTaskModal() {
     }
   })
 }
+
+function focusTask(id: string) {
+  taskStore.setActive(id);
+}
 </script>
 
 <template>
@@ -44,22 +48,15 @@ function openNewTaskModal() {
           class="mt-4 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
         Nouvelle tâche
       </button>
-      <div v-for="task in taskStore.tasks" class="mt-5 flex items-center justify-between p-2">
-        <div class="flex items-center justify-center gap-2"><input type="checkbox" class="defaultCheckbox relative flex h-[20px] min-h-[20px] w-[20px] min-w-[20px] appearance-none items-center
+      <button @click="focusTask(task.id)" v-for="task in taskStore.tasks"
+              class="mt-5 flex items-center justify-between p-2">
+        <span class="flex items-center justify-center gap-2"><input type="checkbox" class="defaultCheckbox relative flex h-[20px] min-h-[20px] w-[20px] min-w-[20px] appearance-none items-center
       justify-center rounded-md border border-gray-300 text-white/0 outline-none transition duration-[0.2s]
       checked:border-none checked:text-white hover:cursor-pointer dark:border-white/10 checked:bg-brand-500 dark:checked:bg-brand-400 undefined"
                                                                    name="weekly">
-          <p class="text-base font-bold text-navy-700 dark:text-white">{{ task.shortDescription }}</p></div>
-        <button @click="taskStore.deleteTask(task.id)">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               stroke-linecap="round" stroke-linejoin="round" width="24" height="24" stroke-width="2">
-            <path d="M4 7h16"></path>
-            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-            <path d="M10 12l4 4m0 -4l-4 4"></path>
-          </svg>
-        </button>
-      </div>
+          <p class="text-base font-bold text-navy-700 dark:text-white">{{ task.shortDescription }}</p>
+        </span>
+      </button>
     </div>
   </div>
 </template>
